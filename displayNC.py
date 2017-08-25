@@ -6,6 +6,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from matplotlib.dates import DateFormatter
+import plotly.plotly as py
 
 def getArray(nc,name) :
     #nc = Dataset(filename, mode='r')
@@ -13,6 +14,8 @@ def getArray(nc,name) :
     myArray = np.flipud(np.transpose(np.squeeze(myArray)))
     #nc.close()
     return myArray
+
+
     
 
 def displayVariables(filename,variables,figname):
@@ -59,8 +62,7 @@ def temperatureDisplay(filename,figname) :
     arrayList.append(arrayList[0] - arrayList[1])
     
     minVal = 50000
-    maxVal = -50000
-    
+    maxVal = -50000    
     
     for i in arrayList :
         mini = np.amin(i)
@@ -89,12 +91,31 @@ def temperatureDisplay(filename,figname) :
     cbar_ax = fig.add_axes([0.05, 0.075, 0.9, 0.025])
     axes[0].set_title('Observed')
     axes[1].set_title('Simulated')
-    axes[2].set_title('Observerd - Simulated')
+    axes[2].set_title('Observed - Simulated')
             
     plt.colorbar(im,orientation='horizontal', cax = cbar_ax, label =r'Temperature $\left(^{\circ}C\right)$')
     #fig.suptitle('Observed, simulated and residual temperature profiles', size = 'xx-large')
     #fig.tight_layout()
     plt.savefig(figname)
+    plt.close()
     nc.close()
+    
+def showByDepth(data) :
+    figure = {
+    'data': [],
+    'layout': {},
+    'frames': [],
+    'config': {'scrollzoom': True}
+    }
+    # fill in most of layout
+    figure['layout']['xaxis'] = {'range': [30, 85], 'title': 'Life Expectancy', 'gridcolor': '#FFFFFF'}
+    figure['layout']['yaxis'] = {'title': 'GDP per Capita', 'type': 'log', 'gridcolor': '#FFFFFF'}
+    figure['layout']['hovermode'] = 'closest'
+    figure['layout']['plot_bgcolor'] = 'rgb(223, 232, 243)'
+    return figure
+    
+
+    
+
 
     
