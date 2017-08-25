@@ -13,10 +13,7 @@ def getArray(nc,name) :
     myArray = nc.variables[name][:]
     myArray = np.flipud(np.transpose(np.squeeze(myArray)))
     #nc.close()
-    return myArray
-
-
-    
+    return myArray    
 
 def displayVariables(filename,variables,figname):
     print(filename,variables)
@@ -100,19 +97,7 @@ def temperatureDisplay(filename,figname) :
     plt.close()
     nc.close()
     
-def showByDepth(data) :
-    figure = {
-    'data': [],
-    'layout': {},
-    'frames': [],
-    'config': {'scrollzoom': True}
-    }
-    # fill in most of layout
-    figure['layout']['xaxis'] = {'range': [30, 85], 'title': 'Life Expectancy', 'gridcolor': '#FFFFFF'}
-    figure['layout']['yaxis'] = {'title': 'GDP per Capita', 'type': 'log', 'gridcolor': '#FFFFFF'}
-    figure['layout']['hovermode'] = 'closest'
-    figure['layout']['plot_bgcolor'] = 'rgb(223, 232, 243)'
-    return figure
+
     
 
     
