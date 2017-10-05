@@ -13,12 +13,19 @@ def getArray(nc,name) :
     myArray = nc.variables[name][:]
     myArray = np.flipud(np.transpose(np.squeeze(myArray)))
     #nc.close()
-    return myArray    
+    return myArray
+
+def getSingleArray(filename,name) :
+    nc = Dataset(filename, mode='r')
+    myArray = nc.variables[name][:]
+    myArray = np.flipud(np.transpose(np.squeeze(myArray)))
+    nc.close()
+    return myArray 
 
 def displayVariables(filename,variables,figname):
     print(filename,variables)
     nc = Dataset(filename, mode='r')
-    print('The variables contained in the output database are:')
+    #print('The variables contained in the output database are:')
     keys = nc.variables.keys()
     for i,j in zip(nc.variables,keys):
         a = nc.variables[i].shape
@@ -33,13 +40,20 @@ def displayVariables(filename,variables,figname):
     zz = np.flipud(np.array(nc.variables['z'][0]))
     
     #General settings for the plot
-    cmap = matplotlib.cm.coolwarm #jet #afmhot_r
+    cmap = matplotlib.cm.gist_ncar #jet #afmhot_r
     fig,axes = plt.subplots(nrows = len(variables), ncols = 1, figsize = (7.5, 3*(len(variables)+1)))
     for (aH, name) in zip(axes,variables) :
         mat = getArray(nc,name)
-        aH.pcolormesh(tt, zz, mat, cmap = cmap)
+        im = aH.pcolormesh(timestamp, zz, mat, cmap = cmap)
+        aH.xaxis_date()
+        aH.set_ylabel('Depth (m)')
+        #aH.pcolormesh(tt, zz, mat, cmap = cmap)
+    cbar_ax = fig.add_axes([0.05, 0.075, 0.9, 0.025])
+    plt.colorbar(im,orientation='horizontal', cax = cbar_ax, label =r'CDOM')
     plt.savefig(figname)
+    plt.close("all")
     nc.close()
+    return timestamp
     
 class MidpointNormalize(colors.Normalize):
     def __init__(self, vmin=None, vmax=None, midpoint=None, clip=False):
